@@ -1,3 +1,21 @@
+"""Tư thế của nhân vật người chơi (nhìn thấy khi bấm F5): nhịp đi bộ, cúi người, ngồi và các cử chỉ.
+
+Port từ voxel-engine (WalkCycle.java + HumanoidFigure.java). Lớp này chỉ tính GÓC các khớp (độ),
+không đụng tới OpenGL nên kiểm thử được; việc dựng ma trận và vẽ nằm ở render/avatar_renderer.py.
+
+Quy ước (giống Java): nhân vật quay mặt về +Z, quay quanh trục X dương là "đưa chi về phía trước"
+khi góc ÂM (chân đá ra trước = góc âm); quay quanh Z dương đưa tay ra ngoài về phía +X.
+Đơn vị dài là điểm ảnh của skin 64x64 (người cao 32).
+"""
+
+"""
+pose = AvatarPose()
+pose.update(dt, distance, crouching)    # mỗi khung hình; distance = quãng đường ngang vừa đi
+pose.toggle_sit()                       # phím C
+pose.toggle_gesture("wave")             # phím V; GESTURES = wave, zombie, cheer
+joints = pose.joints()                  # dict góc các khớp + độ hạ thân, đưa cho AvatarRenderer
+"""
+
 import math
 
 import numpy as np

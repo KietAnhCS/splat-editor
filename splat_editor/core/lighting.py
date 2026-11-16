@@ -1,3 +1,23 @@
+"""Ánh sáng và chu kỳ ngày đêm (T4 + T5).
+
+- Ánh sáng môi trường (ambient) + một mặt trời (ánh sáng định hướng) + tối đa 8 "khối đèn" (đèn điểm).
+- Phong shading: diffuse + specular, tính trong shader cho từng gaussian (xem splat_prep.vert).
+- Bóng đổ của mặt trời bằng shadow mapping (bản đồ độ sâu nhìn từ mặt trời, vẽ ở SplatRenderer).
+- Mặt trời chuyển động theo thời gian; chu kỳ ngày đêm là một máy trạng thái (NIGHT -> DAWN -> DAY -> DUSK)
+  điều khiển màu bầu trời và tự bật / tắt các khối đèn.
+
+Không có OpenGL ở đây: Lighting chỉ giữ trạng thái và đổi ra tham số (params) cho renderer.
+"""
+
+"""
+lighting = Lighting()
+lighting.set_bounds(center, radius)         # kích thước cảnh (để đặt tầm đèn, bản đồ bóng)
+lighting.add_sun()                          # bật mặt trời (và bật hệ thống ánh sáng)
+light = lighting.add_light(position)        # thêm một khối đèn, trả về None nếu đã đủ 8
+lighting.update(dt)                         # mỗi khung hình: thời gian, máy trạng thái ngày đêm
+params = lighting.params()                  # dict cho SplatRenderer.set_lighting / LightRenderer
+"""
+
 import math
 from dataclasses import dataclass
 from enum import Enum

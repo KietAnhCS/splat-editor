@@ -1,3 +1,23 @@
+"""Vẽ Gaussian splat bằng OpenGL 3.3, đủ nhanh cho cảnh 10-15 triệu gaussian trên máy yếu.
+
+Ý tưởng:
+1. Mỗi gaussian 3D có tâm, màu, độ đục, scale và quaternion. Dữ liệu được nén còn 32 byte /
+   gaussian (2 texel RGBA32UI: tâm float32, còn lại half float / 8 bit) và đưa lên GPU một lần,
+   xếp theo thứ tự Morton của LodIndex ("vị trí"), để gaussian gần nhau nằm gần nhau trong bộ nhớ.
+   Hệ số SH bậc cao lượng tử 8 bit (1 texel RGBA8 / hệ số); nếu quá ngân sách bộ nhớ
+   (SH_VRAM_BUDGET) thì tự hạ bậc SH.
+2. LOD (xem lod.py, sorter.py): mỗi khi camera đổi, luồng nền chọn tối đa `budget` gaussian
+   (bỏ khối ngoài khung nhìn, khối xa lấy ít) rồi sắp xếp xa -> gần.
+3. Pass 1 (transform feedback): mỗi gaussian được chọn chạy vertex shader MỘT lần, theo thứ tự
+   bộ nhớ (đọc liền mạch), chiếu Sigma = R S S^T R^T xuống màn hình thành ellipse 2D
+   (Sigma' = J W Sigma W^T J^T) và tính màu (kể cả SH, vùng chọn), ghi 32 byte vào buffer.
+   Camera đứng yên thì bỏ qua pass này.
+4. Pass 2: theo thứ tự xa -> gần, mỗi gaussian vẽ một hình vuông (4 đỉnh, instancing) kéo theo
+   2 trục ellipse; fragment shader tô theo hàm gauss exp(-r^2/2) và trộn alpha (premultiplied).
+5. Trạng thái mỗi gaussian nằm ở một texture buffer riêng, 1 byte / gaussian, để cập nhật nhanh:
+   bit STATE_SELECTED (đang chọn, pha màu vàng) và bit STATE_DELETED (đã xoá mềm: luồng sắp xếp
+   bỏ qua, pass 1 loại bỏ). Xoá / hoàn tác chỉ gửi lại mảng này, không gửi lại dữ liệu gaussian.
+"""
 
 """
 renderer = SplatRenderer()              # cần ngữ cảnh GL

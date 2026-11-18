@@ -149,18 +149,19 @@ SplatOpenGL/
 │   ├── app.py                # Application class: wiring, main loop, action registry
 │   ├── core/                 # data model, no OpenGL: layers, scene, undo, LOD, SH, lighting, physics
 │   ├── io/                   # PLY reading/writing and decoding of the 3DGS columns
-│   ├── editor/               # editing operations and the selection brush
-│   ├── render/               # OpenGL: shaders, camera, splat rendering, floor grid, lights, avatar
-│   │   └── shaders/          # GLSL sources
+│   ├── editor/                # editing operations and the selection brush
+│   ├── render/                # OpenGL: shaders, camera, splat rendering, floor grid, lights, avatar
+│   │   ├── shaders/           # GLSL sources
+│   │   └── textures/          # avatar textures
 │   └── ui/                   # GLFW window, Dear ImGui, mouse and keyboard
-├── docs/                     # slides (SplatEditor.pptx) and report (main.pdf)
-├── report/                   # LaTeX report (English and Vietnamese) with figures
+├── docs/                     # slides (SplatEditor.pptx)
 └── assets/                   # README images
 ```
 
+The LaTeX report and presentation notes are kept outside of version control (see `.gitignore`).
+
 ## Documentation
 
-- Report: [`docs/main.pdf`](docs/main.pdf)
 - Slides: [`docs/SplatEditor.pptx`](docs/SplatEditor.pptx)
 
 ## Acknowledgements
